@@ -44,15 +44,27 @@ classdef world
 
         function this = reset_world(this, world_type = world_preset_type.RANDOM)
             this.cells = this.get_preset_cells(world_type);
-            this.reset_generation();
+            this = this.reset_generation();
         endfunction
 
         function this = reset_generation(this)
             this.generation = this.start_generation_at;
         endfunction
 
+        function generation_str = generation_str(this)
+            generation_str = ["Generation ", int2str(this.generation)];
+        endfunction
+
+        function this = clear_cells(this)
+            this.cells = this.empty_cells();
+        endfunction
+
         function generation = get_generation(this)
             generation = this.generation;
+        endfunction
+
+        function cells = get_cells(this)
+            cells = this.cells;
         endfunction
 
         function cells = get_preset_cells(this, world_type)
