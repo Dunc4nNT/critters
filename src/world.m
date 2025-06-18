@@ -7,7 +7,7 @@ classdef world
         start_generation_at;
     endproperties
 
-    methods (Access = "private")
+    methods(Access = "protected")
         function is_valid = _is_valid_size(self, x, name)
             is_valid = false;
 
@@ -28,35 +28,61 @@ classdef world
     endmethods
 
     methods
-        function world = world(width, height, start_generation_at = 0)
-            if (world._is_valid_size(width, "Width"))
-                world.width = width;
+        function this = world(width, height, start_generation_at = uint32(0), world_type = world_preset_type.RANDOM)
+            if (this._is_valid_size(width, "Width"))
+                this.width = width;
             endif
 
-            if (world._is_valid_size(height, "Height"))
-                world.height = height;
+            if (this._is_valid_size(height, "Height"))
+                this.height = height;
             endif
 
-            world.start_generation_at = start_generation_at;
+            this.start_generation_at = start_generation_at;
+            this.cells = this.get_preset_cells(world_type);
+            this.generation = this.start_generation_at;
         endfunction
 
-        function reset_world(self, reset_type = world_reset_type.RANDOM)
-            world.reset_cells(reset_type);
-            world.reset_generation();
+        function reset_world(this, world_type = world_preset_type.RANDOM)
+            this.cells = this.get_preset_cells(world_type);
+            this.reset_generation();
         endfunction
 
-        function reset_generation(self)
-            world.generation = world.start_generation_at;
+        function reset_generation(this)
+            this.generation = this.start_generation_at;
         endfunction
 
-        function reset_cells(self, reset_type)
-            if (reset_type == world_reset_type.RANDOM)
-                world.cells = random_cells();
+        function generation = get_generation(this)
+            generation = this.generation;
+        endfunction
+
+        function cells = get_preset_cells(this, world_type)
+            if (world_type == world_preset_type.EMPTY)
+                cells = this.empty_cells();
+            elseif (world_type == world_preset_type.FILL)
+                cells = this.fill_cells();
+            else
+                cells = this.random_cells();
             endif
         endfunction
 
-        function cells = random_cells(self) 
-            cells = rand(world.width, world.height) < 1/3;
+        function cells = random_cells(this, probability = 1/3)
+            cells = rand(this.width, this.height) < probability;
+        endfunction
+
+        function cells = empty_cells(this)
+            cells = zeros(this.width, this.height);
+        endfunction
+
+        function cells = fill_cells(this)
+            cells = ones(this.width, this.height);
+        endfunction
+    endmethods
+
+    methods(Abstract)
+        function next_step(this)
+        endfunction
+
+        function previous_step(this)
         endfunction
     endmethods
 endclassdef
