@@ -42,12 +42,12 @@ classdef world
             this.generation = this.start_generation_at;
         endfunction
 
-        function reset_world(this, world_type = world_preset_type.RANDOM)
+        function this = reset_world(this, world_type = world_preset_type.RANDOM)
             this.cells = this.get_preset_cells(world_type);
             this.reset_generation();
         endfunction
 
-        function reset_generation(this)
+        function this = reset_generation(this)
             this.generation = this.start_generation_at;
         endfunction
 
@@ -79,10 +79,10 @@ classdef world
     endmethods
 
     methods(Abstract)
-        function next_step(this)
+        function this = next_step(this)
         endfunction
 
-        function previous_step(this)
+        function this = previous_step(this)
         endfunction
     endmethods
 endclassdef
