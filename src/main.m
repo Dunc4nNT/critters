@@ -15,7 +15,7 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     data.primary_colour = [1.0, 1.0, 1.0];
     data.secondary_colour = [0.0, 0.0, 0.0];
     data.tertiary_colour = [0.6, 0.0, 0.0];
-    data.world = game_of_life_world(world_width, world_height, start_generation_at);
+    data.world = critters_world(world_width, world_height, start_generation_at);
 
     data.fig = figure(
         "name", "Critters",
