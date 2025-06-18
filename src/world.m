@@ -37,7 +37,7 @@ classdef world
                 world.height = height;
             endif
 
-            world.start_generation_at = start_generation_at
+            world.start_generation_at = start_generation_at;
         endfunction
 
         function reset_world(self, reset_type = world_reset_type.RANDOM)

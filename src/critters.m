@@ -13,4 +13,4 @@ function simulate(world_width, world_height, start_generation_at)
     data.world = world(world_width, world_height, start_generation_at);
 endfunction
 
-simulate(ROWS, COLS, START_GENERATION_AT)
+simulate(ROWS, COLS, START_GENERATION_AT);
