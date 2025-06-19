@@ -11,20 +11,44 @@ classdef critters_world < world
                 offset = 1;
             endif
 
-            % TODO: fix the indexing issue, it's missing some corner cells
             % TODO: make this not use for loops...
-            for row = 1:2:(rows(this.cells) - 2)
-                for col = 1:2:(columns(this.cells) - 2)
+            for row = 1:2:(rows(this.cells))
+                for col = 1:2:(columns(this.cells))
                     x = row + offset;
                     y = col + offset;
 
+                    if (x > rows(this.cells))
+                        x = mod(x, rows(this.cells));
+                    endif
+
+                    if (y > columns(this.cells))
+                        y = mod(y, columns(this.cells));
+                    endif
+
+                    x2 = x + 1;
+                    y2 = y + 1;
+
+                    if (x2 > rows(this.cells))
+                        x2 = mod(x2, rows(this.cells));
+                    endif
+
+                    if (y2 > columns(this.cells))
+                        y2 = mod(y2, columns(this.cells));
+                    endif
+
                     block = [
-                        this.cells(x, y), this.cells(x, y + 1);
-                        this.cells(x + 1, y), this.cells(x + 1, y + 1)
+                        this.cells(x, y), this.cells(x, y2);
+                        this.cells(x2, y), this.cells(x2, y2)
                     ];
 
                     alive = sum(sum(block));
 
+                    block
+                    alive
+                    x
+                    y
+                    x2
+                    y2
                     if (alive != 2)
                         block = ~block;
                     endif
@@ -34,11 +58,19 @@ classdef critters_world < world
                     endif
 
                     this.cells(x, y) = block(1, 1);
-                    this.cells(x, y + 1) = block(1, 2);
-                    this.cells(x + 1, y) = block(2, 1);
-                    this.cells(x + 1, y + 1) = block(2, 2);
+                    this.cells(x, y2) = block(1, 2);
+                    this.cells(x2, y) = block(2, 1);
+                    this.cells(x2, y2) = block(2, 2);
                 endfor
             endfor
+
+            % if (mod(this.generation, 2) == 0)
+            %     selected_cells = this.cells;
+            % else
+            %     selected_cells = this.cells([end 1:end 1], [end 1:end 1]);
+            % endif
+
+            % neighbours = conv2(selected_cells, ones(2), "valid");
 
             this.generation++;
         endfunction
