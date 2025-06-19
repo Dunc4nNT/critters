@@ -138,6 +138,7 @@ function update_gui(data, source)
     set(data.img, "cdata", data.world.cells);
     set(data.generation_label, "string", data.world.generation_str());
     guidata(source, data);
+    drawnow();
 endfunction
 
 function on_previous_step(source, event)
