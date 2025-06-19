@@ -12,12 +12,19 @@ clear screensize;
 function init(world_width, world_height, start_generation_at, screen_width, screen_height)
     data.SCREEN_WIDTH = screen_width;
     data.SCREEN_HEIGHT = screen_height;
-    data.primary_colour = [1.0, 1.0, 1.0];
-    data.secondary_colour = [0.0, 0.0, 0.0];
-    data.tertiary_colour = [0.6, 0.0, 0.0];
+    data.primary_colour_200 = [0.8627450980392157, 0.8901960784313725, 0.8941176470588236];
+    data.secondary_colour_300 = [0.8117647058823529, 0.7098039215686275, 0.803921568627451];
+    data.secondary_colour_600 = [0.43529411764705883, 0.28627450980392155, 0.42745098039215684];
+    data.secondary_colour_800 = [0.1450980392156863, 0.09411764705882353, 0.1411764705882353];
+    data.colour_white = [1, 1, 1];
+    data.colour_grey_200 = [0.8509803921568627, 0.8509803921568627, 0.8509803921568627];
+    data.colour_grey_800 = [0.25098039215686274, 0.25098039215686274, 0.25098039215686274];
+    data.colour_black = [0, 0, 0];
     data.world = critters_world(world_width, world_height, start_generation_at);
     data.valid_file_formats = {"*.txt;*.csv", "Text Files"; "*.png;", "Images"};
     data.is_playing = false;
+    data.default_play_speed = 0.5;
+    data.play_speed = data.default_play_speed;
 
     data.fig = figure(
         "name", "Critters",
@@ -25,14 +32,14 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "units", "pixels",
         "resize", "off",
         "menubar", "none",
-        "color", data.tertiary_colour,
-        "position", [(data.SCREEN_WIDTH - 1600) / 2, (data.SCREEN_HEIGHT - 900) / 2, 1600, 900]
+        "color", data.secondary_colour_600,
+        "position", [(data.SCREEN_WIDTH - 1600) / 2, (data.SCREEN_HEIGHT - 800) / 2, 1600, 800]
     );
 
     data.axs = axes(
         "units", "pixels",
-        "position", [0, 100, 1600, 800],
-        "colormap", [data.secondary_colour; data.primary_colour]
+        "position", [0, 0, 1200, 800],
+        "colormap", [data.secondary_colour_800; data.primary_colour_200]
     );
 
     data.img = imagesc(data.axs, data.world.get_cells);
@@ -42,8 +49,8 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "style", "pushbutton",
         "units", "pixels",
         "string", "Previous Step",
-        "foregroundcolor", data.primary_colour,
-        "backgroundcolor", data.secondary_colour,
+        "foregroundcolor", data.colour_grey_800,
+        "backgroundcolor", data.secondary_colour_300,
         "position", [25, 25, 200, 50],
         "fontunits", "pixels",
         "fontsize", 16,
@@ -55,8 +62,8 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "style", "pushbutton",
         "units", "pixels",
         "string", "Next Step",
-        "foregroundcolor", data.primary_colour,
-        "backgroundcolor", data.secondary_colour,
+        "foregroundcolor", data.colour_grey_800,
+        "backgroundcolor", data.secondary_colour_300,
         "position", [250, 25, 200, 50],
         "fontunits", "pixels",
         "fontsize", 16,
@@ -68,8 +75,8 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "style", "pushbutton",
         "units", "pixels",
         "string", "Reset World",
-        "foregroundcolor", data.primary_colour,
-        "backgroundcolor", data.secondary_colour,
+        "foregroundcolor", data.colour_grey_800,
+        "backgroundcolor", data.secondary_colour_300,
         "position", [475, 25, 200, 50],
         "fontunits", "pixels",
         "fontsize", 16,
@@ -81,8 +88,8 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "style", "text",
         "units", "pixels",
         "string", data.world.generation_str(),
-        "foregroundcolor", data.primary_colour,
-        "backgroundcolor", data.secondary_colour,
+        "foregroundcolor", data.colour_grey_800,
+        "backgroundcolor", data.secondary_colour_300,
         "position", [700, 25, 200, 50],
         "fontunits", "pixels",
         "fontsize", 16
@@ -92,8 +99,8 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "style", "pushbutton",
         "units", "pixels",
         "string", "Export World",
-        "foregroundcolor", data.primary_colour,
-        "backgroundcolor", data.secondary_colour,
+        "foregroundcolor", data.colour_grey_800,
+        "backgroundcolor", data.secondary_colour_300,
         "position", [925, 25, 200, 50],
         "fontunits", "pixels",
         "fontsize", 16,
@@ -105,8 +112,8 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "style", "pushbutton",
         "units", "pixels",
         "string", "Import World",
-        "foregroundcolor", data.primary_colour,
-        "backgroundcolor", data.secondary_colour,
+        "foregroundcolor", data.colour_grey_800,
+        "backgroundcolor", data.secondary_colour_300,
         "position", [1150, 25, 200, 50],
         "fontunits", "pixels",
         "fontsize", 16,
@@ -118,13 +125,28 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "style", "togglebutton",
         "units", "pixels",
         "string", "Toggle Play",
-        "foregroundcolor", data.primary_colour,
-        "backgroundcolor", data.secondary_colour,
+        "foregroundcolor", data.colour_grey_800,
+        "backgroundcolor", data.secondary_colour_300,
         "position", [1375, 25, 200, 50],
         "fontunits", "pixels",
         "fontsize", 16,
         "tooltipstring", "Play or pause the automaton simulation.",
         "callback", @on_toggle_play
+    );
+
+    data.adjust_speed_button = uicontrol(
+        "style", "slider",
+        "units", "pixels",
+        "string", "Speed",
+        "value", data.default_play_speed,
+        "sliderstep", [0.01, 0.1],
+        "foregroundcolor", data.colour_grey_800,
+        "backgroundcolor", data.secondary_colour_300,
+        "position", [1375, 100, 200, 50],
+        "fontunits", "pixels",
+        "fontsize", 16,
+        "tooltipstring", "Adjust the simulation speed.",
+        "callback", @on_adjust_speed
     );
 
     guidata(data.fig, data);
@@ -222,10 +244,17 @@ function on_toggle_play(source, event)
         data.world = data.world.next_step();
 
         update_gui(data, source);
-        pause(1);
+        pause(1.5 - data.play_speed);
 
         data = guidata(source);
     endwhile
+endfunction
+
+function on_adjust_speed(source, event)
+    data = guidata(source);
+
+    data.play_speed = get(gcbo, "value");
+    guidata(source, data);
 endfunction
 
 init(ROWS, COLS, START_GENERATION_AT, SCREEN_WIDTH, SCREEN_HEIGHT);
