@@ -47,6 +47,18 @@ classdef world
             this = this.reset_generation();
         endfunction
 
+        function this = set_cells(this, new_cells)
+            if (ndims(new_cells) != 2)
+                error("New world cells must have exactly two dimensions.");
+                return;
+            endif
+
+            this.width = rows(new_cells);
+            this.height = columns(new_cells);
+            this.cells = new_cells;
+            this = this.reset_generation();
+        endfunction
+
         function this = reset_generation(this)
             this.generation = this.start_generation_at;
         endfunction
