@@ -17,6 +17,7 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     data.tertiary_colour = [0.6, 0.0, 0.0];
     data.world = critters_world(world_width, world_height, start_generation_at);
     data.valid_file_formats = {"*.txt;*.csv", "Text Files"; "*.png;", "Images"};
+    data.is_playing = false;
 
     data.fig = figure(
         "name", "Critters",
@@ -66,7 +67,6 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     data.reset_button = uicontrol(
         "style", "pushbutton",
         "units", "pixels",
-        "selectionhighlight", "on",
         "string", "Reset World",
         "foregroundcolor", data.primary_colour,
         "backgroundcolor", data.secondary_colour,
@@ -91,7 +91,6 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     data.export_button = uicontrol(
         "style", "pushbutton",
         "units", "pixels",
-        "selectionhighlight", "on",
         "string", "Export World",
         "foregroundcolor", data.primary_colour,
         "backgroundcolor", data.secondary_colour,
@@ -105,7 +104,6 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     data.import_button = uicontrol(
         "style", "pushbutton",
         "units", "pixels",
-        "selectionhighlight", "on",
         "string", "Import World",
         "foregroundcolor", data.primary_colour,
         "backgroundcolor", data.secondary_colour,
@@ -114,6 +112,19 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "fontsize", 16,
         "tooltipstring", "Import a world.",
         "callback", @on_import
+    );
+
+    data.toggle_play_button = uicontrol(
+        "style", "togglebutton",
+        "units", "pixels",
+        "string", "Toggle Play",
+        "foregroundcolor", data.primary_colour,
+        "backgroundcolor", data.secondary_colour,
+        "position", [1375, 25, 200, 50],
+        "fontunits", "pixels",
+        "fontsize", 16,
+        "tooltipstring", "Play or pause the automaton simulation.",
+        "callback", @on_toggle_play
     );
 
     guidata(data.fig, data);
@@ -198,6 +209,22 @@ function on_import(source, event)
     end_try_catch
 
     update_gui(data, source);
+endfunction
+
+function on_toggle_play(source, event)
+    data = guidata(source);
+
+    data.is_playing = get(gcbo, "value");
+    guidata(source, data);
+
+    while data.is_playing
+        data.world = data.world.next_step();
+
+        update_gui(data, source);
+        pause(1);
+
+        data = guidata(source);
+    endwhile
 endfunction
 
 init(ROWS, COLS, START_GENERATION_AT, SCREEN_WIDTH, SCREEN_HEIGHT);
