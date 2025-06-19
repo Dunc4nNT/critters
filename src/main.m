@@ -38,8 +38,8 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     );
 
     data.axs = axes(
-        "units", "pixels",
-        "position", [0, 0, 1200, 800],
+        "units", "normalized",
+        "position", [0, 0, 0.75, 1],
         "colormap", data.colourmap
     );
 
@@ -48,13 +48,13 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
 
     data.previous_step_button = uicontrol(
         "style", "pushbutton",
-        "units", "pixels",
+        "units", "normalized",
         "string", "Previous Step",
         "foregroundcolor", data.colour_grey_800,
         "backgroundcolor", data.secondary_colour_300,
-        "position", [25, 25, 200, 50],
-        "fontunits", "pixels",
-        "fontsize", 16,
+        "position", [0.80, 0.80, 0.15, 0.05],
+        "fontunits", "normalized",
+        "fontsize", 0.5,
         "tooltipstring", "Step to the previous generation.",
         "callback", @on_previous_step
     );
