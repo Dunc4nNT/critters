@@ -26,6 +26,7 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     data.is_playing = false;
     data.default_play_speed = 0.5;
     data.play_speed = data.default_play_speed;
+    data.is_editing = false;
     data.colourmap = [data.secondary_colour_800; data.primary_colour_200];
 
     data.fig = figure(
@@ -151,6 +152,19 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "callback", @on_adjust_speed
     );
 
+    data.toggle_edit_mode_button = uicontrol(
+        "style", "togglebutton",
+        "units", "normalized",
+        "string", "Toggle Edit Mode",
+        "foregroundcolor", data.colour_grey_800,
+        "backgroundcolor", data.secondary_colour_300,
+        "position", [0.80, 0.10, 0.15, 0.05],
+        "fontunits", "normalized",
+        "fontsize", data.font_size_300,
+        "tooltipstring", "Toggle edit world mode.",
+        "callback", @on_toggle_edit_mode
+    );
+
     guidata(data.fig, data);
     drawnow();
 
@@ -267,6 +281,34 @@ function on_adjust_speed(source, event)
 
     data.play_speed = get(gcbo, "value");
     guidata(source, data);
+endfunction
+
+function on_toggle_edit_mode(source, event)
+    data = guidata(source);
+
+    data.is_editing = get(gcbo, "value");
+    guidata(source, data);
+
+    while (data.is_editing)
+        % TODO: probably avoid using this function
+        [x, y, button] = ginput(1);
+        % At least returns to normal after 1 incorrect flip.
+        data = guidata(source);
+
+        if (button == 1)
+            x = round(x);
+            y = round(y);
+
+            cells = data.world.get_cells();
+            if (!(x < 1 | x > columns(cells) | y < 1 | y > rows(cells)))
+                data.world = data.world.flip_cell(x, y);
+                update_gui(data, source);
+            endif
+        endif
+
+        pause(0.1);
+        data = guidata(source);
+    endwhile
 endfunction
 
 init(ROWS, COLS, START_GENERATION_AT, SCREEN_WIDTH, SCREEN_HEIGHT);

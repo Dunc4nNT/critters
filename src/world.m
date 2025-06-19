@@ -59,6 +59,22 @@ classdef world
             this = this.reset_generation();
         endfunction
 
+        function this = set_cell(this, x, y, is_alive)
+            if (x < 1 | x > columns(this.cells) | y < 1 | y > rows(this.cells))
+                error("Cell index is out of range.");
+            endif
+
+            this.cells(y, x) = logical(is_alive);
+        endfunction
+
+        function this = flip_cell(this, x, y)
+            if (x < 1 | x > columns(this.cells) | y < 1 | y > rows(this.cells))
+                error("Cell index is out of range.");
+            endif
+
+            this = this.set_cell(x, y, ~this.cells(y, x));
+        endfunction
+
         function this = reset_generation(this)
             this.generation = this.start_generation_at;
         endfunction
