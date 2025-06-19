@@ -2,7 +2,7 @@ clear all;
 close all;
 
 ROWS = uint32(100);
-COLS = uint32(200);
+COLS = uint32(150);
 START_GENERATION_AT = uint32(0);
 
 screensize = get(0.0, "screensize")(3:4);
@@ -25,6 +25,7 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     data.is_playing = false;
     data.default_play_speed = 0.5;
     data.play_speed = data.default_play_speed;
+    data.colourmap = [data.secondary_colour_800; data.primary_colour_200];
 
     data.fig = figure(
         "name", "Critters",
@@ -39,7 +40,7 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     data.axs = axes(
         "units", "pixels",
         "position", [0, 0, 1200, 800],
-        "colormap", [data.secondary_colour_800; data.primary_colour_200]
+        "colormap", data.colourmap
     );
 
     data.img = imagesc(data.axs, data.world.get_cells);
@@ -157,6 +158,15 @@ endfunction
 
 % Update world and UI elements.
 function update_gui(data, source)
+    % To prevent constant flickering of the screen, invert the colours on odd steps.
+    if (isequal(class(data.world), "critters_world"))
+        if (mod(data.world.get_generation(), 2) == 0)
+            set(data.axs, "colormap", data.colourmap);
+        else
+            set(data.axs, "colormap", flipud(data.colourmap));
+        endif
+    endif
+
     set(data.img, "cdata", data.world.cells);
     set(data.generation_label, "string", data.world.generation_str());
     guidata(source, data);
@@ -244,8 +254,9 @@ function on_toggle_play(source, event)
         data.world = data.world.next_step();
 
         update_gui(data, source);
-        pause(1.5 - data.play_speed);
+        pause(1.25 - data.play_speed);
 
+        % BUG: when exiting the application while playing is on, this errors as source is no longer valid.
         data = guidata(source);
     endwhile
 endfunction
