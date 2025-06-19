@@ -20,6 +20,7 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     data.colour_grey_200 = [0.8509803921568627, 0.8509803921568627, 0.8509803921568627];
     data.colour_grey_800 = [0.25098039215686274, 0.25098039215686274, 0.25098039215686274];
     data.colour_black = [0, 0, 0];
+    data.font_size_300 = 0.5;
     data.world = critters_world(world_width, world_height, start_generation_at);
     data.valid_file_formats = {"*.txt;*.csv", "Text Files"; "*.png;", "Images"};
     data.is_playing = false;
@@ -54,98 +55,98 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
         "backgroundcolor", data.secondary_colour_300,
         "position", [0.80, 0.80, 0.15, 0.05],
         "fontunits", "normalized",
-        "fontsize", 0.5,
+        "fontsize", data.font_size_300,
         "tooltipstring", "Step to the previous generation.",
         "callback", @on_previous_step
     );
 
     data.next_step_button = uicontrol(
         "style", "pushbutton",
-        "units", "pixels",
+        "units", "normalized",
         "string", "Next Step",
         "foregroundcolor", data.colour_grey_800,
         "backgroundcolor", data.secondary_colour_300,
-        "position", [250, 25, 200, 50],
-        "fontunits", "pixels",
-        "fontsize", 16,
+        "position", [0.80, 0.90, 0.15, 0.05],
+        "fontunits", "normalized",
+        "fontsize", data.font_size_300,
         "tooltipstring", "Step to the next generation.",
         "callback", @on_next_step
     );
 
     data.reset_button = uicontrol(
         "style", "pushbutton",
-        "units", "pixels",
+        "units", "normalized",
         "string", "Reset World",
         "foregroundcolor", data.colour_grey_800,
         "backgroundcolor", data.secondary_colour_300,
-        "position", [475, 25, 200, 50],
-        "fontunits", "pixels",
-        "fontsize", 16,
+        "position", [0.80, 0.70, 0.15, 0.05],
+        "fontunits", "normalized",
+        "fontsize", data.font_size_300,
         "tooltipstring", "Reset world with random cells.",
         "callback", @on_reset
     );
 
     data.generation_label = uicontrol(
         "style", "text",
-        "units", "pixels",
+        "units", "normalized",
         "string", data.world.generation_str(),
         "foregroundcolor", data.colour_grey_800,
         "backgroundcolor", data.secondary_colour_300,
-        "position", [700, 25, 200, 50],
-        "fontunits", "pixels",
-        "fontsize", 16
+        "position", [0.80, 0.60, 0.15, 0.05],
+        "fontunits", "normalized",
+        "fontsize", data.font_size_300
     );
 
     data.export_button = uicontrol(
         "style", "pushbutton",
-        "units", "pixels",
+        "units", "normalized",
         "string", "Export World",
         "foregroundcolor", data.colour_grey_800,
         "backgroundcolor", data.secondary_colour_300,
-        "position", [925, 25, 200, 50],
-        "fontunits", "pixels",
-        "fontsize", 16,
+        "position", [0.80, 0.50, 0.15, 0.05],
+        "fontunits", "normalized",
+        "fontsize", data.font_size_300,
         "tooltipstring", "Export the world.",
         "callback", @on_export
     );
 
     data.import_button = uicontrol(
         "style", "pushbutton",
-        "units", "pixels",
+        "units", "normalized",
         "string", "Import World",
         "foregroundcolor", data.colour_grey_800,
         "backgroundcolor", data.secondary_colour_300,
-        "position", [1150, 25, 200, 50],
-        "fontunits", "pixels",
-        "fontsize", 16,
+        "position", [0.80, 0.40, 0.15, 0.05],
+        "fontunits", "normalized",
+        "fontsize", data.font_size_300,
         "tooltipstring", "Import a world.",
         "callback", @on_import
     );
 
     data.toggle_play_button = uicontrol(
         "style", "togglebutton",
-        "units", "pixels",
+        "units", "normalized",
         "string", "Toggle Play",
         "foregroundcolor", data.colour_grey_800,
         "backgroundcolor", data.secondary_colour_300,
-        "position", [1375, 25, 200, 50],
-        "fontunits", "pixels",
-        "fontsize", 16,
+        "position", [0.80, 0.30, 0.15, 0.05],
+        "fontunits", "normalized",
+        "fontsize", data.font_size_300,
         "tooltipstring", "Play or pause the automaton simulation.",
         "callback", @on_toggle_play
     );
 
     data.adjust_speed_button = uicontrol(
         "style", "slider",
-        "units", "pixels",
+        "units", "normalized",
         "string", "Speed",
         "value", data.default_play_speed,
         "sliderstep", [0.01, 0.1],
         "foregroundcolor", data.colour_grey_800,
         "backgroundcolor", data.secondary_colour_300,
-        "position", [1375, 100, 200, 50],
-        "fontunits", "pixels",
-        "fontsize", 16,
+        "position", [0.80, 0.20, 0.15, 0.05],
+        "fontunits", "normalized",
+        "fontsize", data.font_size_300,
         "tooltipstring", "Adjust the simulation speed.",
         "callback", @on_adjust_speed
     );
