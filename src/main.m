@@ -1,8 +1,8 @@
 clear all;
 close all;
 
-ROWS = uint32(10);
-COLS = uint32(20);
+ROWS = uint32(100);
+COLS = uint32(200);
 START_GENERATION_AT = uint32(0);
 
 screensize = get(0.0, "screensize")(3:4);
