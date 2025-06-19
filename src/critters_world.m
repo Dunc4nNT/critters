@@ -43,12 +43,6 @@ classdef critters_world < world
 
                     alive = sum(sum(block));
 
-                    block
-                    alive
-                    x
-                    y
-                    x2
-                    y2
                     if (alive != 2)
                         block = ~block;
                     endif
