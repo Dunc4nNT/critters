@@ -1,8 +1,8 @@
 clear all;
 close all;
 
-ROWS = uint32(100);
-COLS = uint32(150);
+ROWS = uint32(20);
+COLS = uint32(30);
 START_GENERATION_AT = uint32(0);
 
 screensize = get(0.0, "screensize")(3:4);
@@ -32,11 +32,11 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     data.fig = figure(
         "name", "Critters",
         "numbertitle", "off",
-        "units", "pixels",
-        "resize", "off",
+        "units", "normalized",
         "menubar", "none",
         "color", data.secondary_colour_600,
-        "position", [(data.SCREEN_WIDTH - 1600) / 2, (data.SCREEN_HEIGHT - 800) / 2, 1600, 800]
+        "position", [0.125, 0.125, 0.75, 0.75],
+        "sizechangedfcn", @on_window_size_change
     );
 
     data.axs = axes(
@@ -309,6 +309,11 @@ function on_toggle_edit_mode(source, event)
         pause(0.1);
         data = guidata(source);
     endwhile
+endfunction
+
+function on_window_size_change(source, event)
+    data = guidata(source);
+    update_gui(data, source);
 endfunction
 
 init(ROWS, COLS, START_GENERATION_AT, SCREEN_WIDTH, SCREEN_HEIGHT);
