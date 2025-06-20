@@ -290,10 +290,11 @@ function on_toggle_edit_mode(source, event)
     guidata(source, data);
 
     while (data.is_editing)
-        % TODO: probably avoid using this function
         [x, y, button] = ginput(1);
-        % At least returns to normal after 1 incorrect flip.
         data = guidata(source);
+        if (!data.is_editing)
+            break;
+        endif
 
         if (button == 1)
             x = round(x);
