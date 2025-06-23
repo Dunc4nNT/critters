@@ -15,7 +15,7 @@ classdef critters_world < world
                 select_cells = this.cells([end 1:end 1], [end 1:end 1]);
             endif
 
-            created_cells = select_cells([1:2:end], [1:2:end]) .* 8 + select_cells([1:2:end], [2:2:end]) .* 4 + select_cells([2:2:end], [1:2:end]) .* 2 + select_cells([2:2:end], [2:2:end]) .* 1 + ones(rows(select_cells)/2, columns(select_cells)/2);
+            created_cells = select_cells([1:2:end], [1:2:end]) .* 8 + select_cells([1:2:end], [2:2:end]) .* 4 + select_cells([2:2:end], [1:2:end]) .* 2 + select_cells([2:2:end], [2:2:end]) .* 1 + 1;
 
             if (mod(this.generation, 2) == 0)
                 this.cells = cell2mat(this.margolus_table(this.rule(created_cells)));

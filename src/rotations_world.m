@@ -1,16 +1,16 @@
-classdef tron_world < world
+classdef rotations_world < world
     properties
-        rule = [16, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 1];
+        rule = [1, 3, 9, 13, 2, 11, 10, 12, 5, 7, 6, 15, 4, 8, 14, 16];
     endproperties
 
     methods
-        function this = tron_world(width, height, start_generation_at = uint32(0), world_type = world_preset_type.RANDOM)
+        function this = rotations_world(width, height, start_generation_at = uint32(0), world_type = world_preset_type.RANDOM)
             this@world(width, height, start_generation_at, world_type);
         endfunction
 
         function this = next_step(this)
             if (mod(this.generation, 2) == 0)
-                select_cells = ~this.cells;
+                select_cells = this.cells;
             else
                 select_cells = this.cells([end 1:end 1], [end 1:end 1]);
             endif
@@ -20,7 +20,7 @@ classdef tron_world < world
             if (mod(this.generation, 2) == 0)
                 this.cells = cell2mat(this.margolus_table(this.rule(created_cells)));
             else
-                this.cells = ~cell2mat(this.margolus_table(this.rule(created_cells)))([2:end-1], [2:end-1]);
+                this.cells = cell2mat(this.margolus_table(this.rule(created_cells)))([2:end-1], [2:end-1]);
             endif
 
             this.generation++;
