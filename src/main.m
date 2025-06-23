@@ -1,8 +1,8 @@
 clear all;
 close all;
 
-ROWS = uint32(100);
-COLS = uint32(150);
+WIDTH = uint32(150);
+HEIGHT = uint32(100);
 START_GENERATION_AT = uint32(0);
 
 screensize = get(0.0, "screensize")(3:4);
@@ -15,4 +15,4 @@ function init(world_width, world_height, start_generation_at, screen_width, scre
     waitfor(data.fig);
 endfunction
 
-init(ROWS, COLS, START_GENERATION_AT, SCREEN_WIDTH, SCREEN_HEIGHT);
+init(WIDTH, HEIGHT, START_GENERATION_AT, SCREEN_WIDTH, SCREEN_HEIGHT);

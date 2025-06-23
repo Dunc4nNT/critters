@@ -1,4 +1,8 @@
 classdef critters_world < world
+    properties
+        rule = [16, 15, 14, 4, 12, 6, 7, 2, 8, 10, 11, 3, 13, 5, 9, 1];
+    endproperties
+
     methods
         function this = critters_world(width, height, start_generation_at = uint32(0), world_type = world_preset_type.RANDOM)
             this@world(width, height, start_generation_at, world_type);
@@ -6,65 +10,18 @@ classdef critters_world < world
 
         function this = next_step(this)
             if (mod(this.generation, 2) == 0)
-                offset = 0;
+                select_cells = ~this.cells;
             else
-                offset = 1;
+                select_cells = this.cells([end 1:end 1], [end 1:end 1]);
             endif
 
-            % TODO: make this not use for loops...
-            for row = 1:2:(rows(this.cells))
-                for col = 1:2:(columns(this.cells))
-                    x = row + offset;
-                    y = col + offset;
+            created_cells = select_cells([1:2:end], [1:2:end]) .* 8 + select_cells([1:2:end], [2:2:end]) .* 4 + select_cells([2:2:end], [1:2:end]) .* 2 + select_cells([2:2:end], [2:2:end]) .* 1 + ones(rows(select_cells)/2, columns(select_cells)/2);
 
-                    if (x > rows(this.cells))
-                        x = mod(x, rows(this.cells));
-                    endif
-
-                    if (y > columns(this.cells))
-                        y = mod(y, columns(this.cells));
-                    endif
-
-                    x2 = x + 1;
-                    y2 = y + 1;
-
-                    if (x2 > rows(this.cells))
-                        x2 = mod(x2, rows(this.cells));
-                    endif
-
-                    if (y2 > columns(this.cells))
-                        y2 = mod(y2, columns(this.cells));
-                    endif
-
-                    block = [
-                        this.cells(x, y), this.cells(x, y2);
-                        this.cells(x2, y), this.cells(x2, y2)
-                    ];
-
-                    alive = sum(sum(block));
-
-                    if (alive != 2)
-                        block = ~block;
-                    endif
-
-                    if (alive == 3)
-                        block = flipud(block);
-                    endif
-
-                    this.cells(x, y) = block(1, 1);
-                    this.cells(x, y2) = block(1, 2);
-                    this.cells(x2, y) = block(2, 1);
-                    this.cells(x2, y2) = block(2, 2);
-                endfor
-            endfor
-
-            % if (mod(this.generation, 2) == 0)
-            %     select_cells = this.cells;
-            % else
-            %     select_cells = this.cells([end 1:end 1], [end 1:end 1]);
-            % endif
-
-            
+            if (mod(this.generation, 2) == 0)
+                this.cells = cell2mat(this.margolus_table(this.rule(created_cells)));
+            else
+                this.cells = ~cell2mat(this.margolus_table(this.rule(created_cells)))([2:end-1], [2:end-1]);
+            endif
 
             this.generation++;
         endfunction

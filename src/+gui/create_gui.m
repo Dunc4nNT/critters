@@ -10,10 +10,10 @@ function data = create_gui(world_width, world_height, start_generation_at, scree
     data.colour_grey_800 = [0.25098039215686274, 0.25098039215686274, 0.25098039215686274];
     data.colour_black = [0, 0, 0];
     data.font_size_300 = 0.5;
-    data.world = critters_world(world_width, world_height, start_generation_at);
+    data.world = critters_world(world_width, world_height, start_generation_at, world_preset_type.EMPTY);
     data.valid_file_formats = {"*.txt;*.csv", "Text Files"; "*.png;", "Images"};
     data.is_playing = false;
-    data.default_play_speed = 0.5;
+    data.default_play_speed = 0.905;
     data.play_speed = data.default_play_speed;
     data.is_editing = false;
     data.colourmap = [data.secondary_colour_800; data.primary_colour_200];
@@ -130,8 +130,10 @@ function data = create_gui(world_width, world_height, start_generation_at, scree
         "style", "slider",
         "units", "normalized",
         "string", "Speed",
+        "min", 0.005,
+        "max", 1.0,
         "value", data.default_play_speed,
-        "sliderstep", [0.01, 0.1],
+        "sliderstep", [0.001, 0.005],
         "foregroundcolor", data.colour_grey_800,
         "backgroundcolor", data.secondary_colour_300,
         "position", [0.80, 0.20, 0.15, 0.05],
@@ -162,15 +164,6 @@ endfunction
 
 % Update world and UI elements.
 function update_gui(data, source)
-    % To prevent constant flickering of the screen, invert the colours on odd steps.
-    if (isequal(class(data.world), "critters_world"))
-        if (mod(data.world.get_generation(), 2) == 0)
-            set(data.axs, "colormap", data.colourmap);
-        else
-            set(data.axs, "colormap", flipud(data.colourmap));
-        endif
-    endif
-
     set(data.img, "cdata", data.world.cells);
     set(data.generation_label, "string", data.world.generation_str());
     guidata(source, data);
@@ -258,7 +251,7 @@ function on_toggle_play(source, event)
         data.world = data.world.next_step();
 
         update_gui(data, source);
-        pause(1.01 - data.play_speed);
+        pause(1.005 - data.play_speed);
 
         % BUG: when exiting the application while playing is on, this errors as source is no longer valid.
         data = guidata(source);

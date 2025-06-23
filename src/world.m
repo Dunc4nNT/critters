@@ -5,6 +5,24 @@ classdef world
         generation;
         cells;
         start_generation_at;
+        margolus_table = {
+            [0, 0; 0, 0],
+            [0, 0; 0, 1],
+            [0, 0; 1, 0],
+            [0, 0; 1, 1],
+            [0, 1; 0, 0],
+            [0, 1; 0, 1],
+            [0, 1; 1, 0],
+            [0, 1; 1, 1],
+            [1, 0; 0, 0],
+            [1, 0; 0, 1],
+            [1, 0; 1, 0],
+            [1, 0; 1, 1],
+            [1, 1; 0, 0],
+            [1, 1; 0, 1],
+            [1, 1; 1, 0],
+            [1, 1; 1, 1]
+        };
     endproperties
 
     methods(Access = "protected")
@@ -106,15 +124,15 @@ classdef world
         endfunction
 
         function cells = random_cells(this, probability = 1/3)
-            cells = rand(this.width, this.height) < probability;
+            cells = rand(this.height, this.width) < probability;
         endfunction
 
         function cells = empty_cells(this)
-            cells = zeros(this.width, this.height);
+            cells = zeros(this.height, this.width);
         endfunction
 
         function cells = fill_cells(this)
-            cells = ones(this.width, this.height);
+            cells = ones(this.height, this.width);
         endfunction
     endmethods
 

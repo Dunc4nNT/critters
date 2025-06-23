@@ -30,7 +30,12 @@ That's it, you can now play Critters!
 
 Critters has a 2D grid with two states, dead and alive. Critters rule uses the Margolus neighbourhood, which, at every generation alternates between 2x2 blocks. The center of a block at one generation, becomes corner to four blocks the next.[^4]
 
-The transition rule for Critters counts how many cells in a block are alive. If the number of alive cells is exactly two, the cells in the block remain unchanged. If there are zero, one, or four cells alive, the state of every cell flips, so alive cells become dead, and dead cells become alive. Finally, in the case three cells are alive, the cells' states flip and the block is rotated 180°.
+The transition rule for Critters counts how many cells in a block are alive. If the number of alive cells is exactly two, the cells in the block remain unchanged. If there are zero, one, or four cells alive, the state of every cell flips, so alive cells become dead, and dead cells become alive. Finally, in the case three cells are alive, the cells' states flip and the block is rotated 180°. All possible combinations can be seen in the figure below.
+
+![Critters ruleset table](./.github/images/critters_ruleset.png)\
+All possible 2x2 block transformations in the Critters ruleset.
+
+Due to the nature of the transformations, the rule leads to a lot of screen flickering as most cells swap state every generation. As this is not pleasant nor useful, this implementation, like many others, inverts the colours every other generation. This means there won't be any screen flickering, but it does mean that every odd generation has alive cells swapped for dead and vice versa.
 
 ## Licensing
 
