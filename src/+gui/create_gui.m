@@ -34,7 +34,7 @@ function data = create_gui(world_width, world_height, start_generation_at, scree
         "colormap", data.colourmap
     );
 
-    data.img = imagesc(data.axs, data.world.get_cells);
+    data.img = imagesc(data.axs, data.world.get_cells());
     axis(data.axs, "off");
 
     data.previous_step_button = uicontrol(
