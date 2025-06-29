@@ -26,6 +26,18 @@ That's it, you can now play Critters!
 
 <!--TODO: once the GUI is finished, add a section here with images explaining how to use the app-->
 
+To switch between critters/tron/bbm/GoL/string thing II, you can edit the following line in `src/+gui/create_gui.m`:
+
+```m
+% valid:
+% critters_world
+% tron_world
+% string_thing_ii_world
+% game_of_life_world
+% bbm_world
+data.world = critters_world(world_width, world_height, start_generation_at, world_preset_type.EMPTY);
+```
+
 ## Ruleset
 
 Critters has a 2D grid with two states, dead and alive. Critters rule uses the Margolus neighbourhood, which, at every generation alternates between 2x2 blocks. The center of a block at one generation, becomes corner to four blocks the next.[^4]
